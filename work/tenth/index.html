@@ -91,11 +91,6 @@
         $('.search__btn').on('click', function() {
           var keyword = $('.search__text__input').val();
           var page = 1;
-          page = countUp();
-          function countUp() {
-            page = page + 1;
-            return page;
-          }
           $.ajax({
             url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
             type: 'GET',
