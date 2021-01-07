@@ -88,12 +88,12 @@
         //   </div>
         // </div>
       $(function() {
-        var page = null;
+        var page = 0;
         var keyword = '';
         $("[data-js='search-btn']").on('click', function() {
           page = 1;
           keyword = $("[data-js='search-word']").val();
-          getBookData(page, keyword);
+          getBookData();
         });
 
         $(document).on('click', "[data-js='page-next']", function(e) {
@@ -102,7 +102,10 @@
             return false;
           }
           page++;
-          getBookData(page, keyword);
+          getBookData();
+          $('body,html').animate({
+              scrollTop: 0
+          }, 0);
         });
         $(document).on('click', "[data-js='page-prev']", function(e) {
           e.preventDefault();
@@ -110,11 +113,13 @@
             return false;
           }
           page--;
-          getBookData(page, keyword);
+          getBookData();
+          $('body,html').animate({
+              scrollTop: 0
+          }, 0);
         });
-      
 
-      function getBookData(page, keyword) {
+      function getBookData() {
         $.ajax({
         url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
         type: 'GET',
@@ -135,6 +140,8 @@
 
           showBookData(data);
         }).fail(function(error) {
+          console.log(error);
+
           clearPageData();
 
           showErrorMessage(error);
@@ -149,33 +156,35 @@
           var itemData = '';
           $.each(data.Items, function(i, item) {
             itemData += '<li class="lists__item">' +
-                        '<div class="lists__item__inner">' +
-                        '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
-                        '<img src=" ' + item.Item.mediumImageUrl + ' " class="lists__item__img" alt="">' +
-                        '<p class="lists__item__detail">作品名： ' + item.Item.title + ' </p>' +
-                        '<p class="lists__item__detail">作者　： ' + item.Item.author + ' </p>' +
-                        '<p class="lists__item__detail">出版社： ' + item.Item.publisherName + ' </p>' +
-                        '</a>' +
-                        '</div>' +
+                          '<div class="lists__item__inner">' +
+                            '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
+                              '<img src=" ' + item.Item.mediumImageUrl + ' " class="lists__item__img" alt="">' +
+                              '<p class="lists__item__detail">作品名： ' + item.Item.title + ' </p>' +
+                              '<p class="lists__item__detail">作者　： ' + item.Item.author + ' </p>' +
+                              '<p class="lists__item__detail">出版社： ' + item.Item.publisherName + ' </p>' +
+                            '</a>' +
+                          '</div>' +
                         '</li>'
           });
-          $('ul').append(itemData);
+          $('.lists').append(itemData);
 
           showPagination(data);
         }
       }
 
       function showPagination(data) {
-        var pagination = '<div class="pager" data-js="pager">' +
-                         '<div class="counter">' +
-                         '<span class="counter-current">' + data.page + '</span>' + '/' + '<span class="counter-all">' + data.pageCount + '</span>' +
-                         '</div>' +
-                         '<div class="btn-wrapper">' +
-                         '<a class="btn-item" data-js="page-prev" href="">前へ</a>' +
-                         '<a class="btn-item" data-js="page-next" href="">次へ</a>' +
-                         '</div>' +
-                         '</div>'
-        $('ul').append(pagination);
+        var pagination ='<div class="pager" data-js="pager">' +
+                          '<div class="counter">' +
+                            '<span class="counter-current">' + data.page + '</span>' + 
+                              '/' + 
+                            '<span class="counter-all">' + data.pageCount + '</span>' +
+                          '</div>' +
+                          '<div class="btn-wrapper">' +
+                            '<a class="btn-item" data-js="page-prev" href="">前へ</a>' +
+                            '<a class="btn-item" data-js="page-next" href="">次へ</a>' +
+                          '</div>' +
+                        '</div>'
+        $('.lists').append(pagination);
 
         if (data.page === 1) {
           $(".btn-item[data-js='page-prev']").addClass('disabled');
@@ -191,9 +200,11 @@
       }
 
       function showErrorMessage(error) {
-        console.log(error);
         var errorMessage = '';
         switch (error.status) {
+          case 0:
+            errorMessage = '通信に失敗しました。インターネットの接続をご確認ください。';
+            break;
           case 400:
             errorMessage = '検索文字が入力されていません。';
             break;
