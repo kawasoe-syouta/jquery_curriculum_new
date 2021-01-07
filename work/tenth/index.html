@@ -100,7 +100,7 @@
           e.preventDefault();
           if ($(this).hasClass('disabled')) {
             return false;
-          };
+          }
           page++;
           getBookData();
           $('body,html').animate({
@@ -112,7 +112,7 @@
           e.preventDefault();
           if ($(this).hasClass('disabled')) {
             return false;
-          };
+          }
           page--;
           getBookData();
           $('body,html').animate({
@@ -143,7 +143,7 @@
             clearPageData();
             showErrorMessage(error);
           });
-        };
+        }
 
         function showBookData(data) {
           var countZero = 0;
@@ -166,8 +166,8 @@
             });
             $('.lists').append(itemData);
             showPagination(data);
-          };
-        };
+          }
+        }
 
         function showPagination(data) {
           var pagination = '<div class="pager" data-js="pager">' +
@@ -180,23 +180,23 @@
                                '<a class="btn-item" data-js="page-prev" href="">前へ</a>' +
                                '<a class="btn-item" data-js="page-next" href="">次へ</a>' +
                              '</div>' +
-                           '</div>'
+                           '</div>';
           $('.lists').after(pagination);
           
           var pageFirst = 1;
           if (data.page === pageFirst) {
             $('.btn-item[data-js="page-prev"]').addClass('disabled');
-          };
+          }
           if (data.page === data.pageCount) {
             $('.btn-item[data-js="page-next"]').addClass('disabled');
-          };
-        };
+          }
+        }
 
         function clearPageData() {
           $('.lists').empty();
           $('.pager').remove();
           $('.message').empty();
-        };
+        }
 
         function showErrorMessage(error) {
           var errorMessage = '';
@@ -222,10 +222,10 @@
             default:
               errorMessage = '予期せぬエラーが発生しました。';
               break;
-          };
+          }
           $('.message').append('<p class="error-message">' + errorMessage + '</p>');
-        };
-      });
+        }
+      })
     </script>
   </body>
 </html>
